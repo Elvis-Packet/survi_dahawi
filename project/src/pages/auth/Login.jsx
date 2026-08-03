@@ -49,7 +49,7 @@ export default function Login() {
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-navy-900 text-white">
           <Hexagon size={18} />
         </div>
-        <p className="text-sm font-bold text-navy-900 dark:text-gray-100">Brainstomers</p>
+        <p className="text-sm font-bold text-navy-900 dark:text-gray-100">SurvitechDahawi</p>
       </div>
 
       <h1 className="text-2xl font-bold tracking-tight text-navy-900 dark:text-gray-100">Sign in to your account</h1>

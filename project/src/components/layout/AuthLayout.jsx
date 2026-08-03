@@ -12,7 +12,7 @@ export default function AuthLayout({ children, side = 'left' }) {
             <Hexagon size={18} />
           </div>
           <div className="leading-tight">
-            <p className="text-sm font-bold">Brainstomers</p>
+            <p className="text-sm font-bold">SurvitechDahawi</p>
             <p className="text-[10px] uppercase tracking-wider text-white/60">Fintech Suite</p>
           </div>
         </div>
@@ -32,7 +32,7 @@ export default function AuthLayout({ children, side = 'left' }) {
           </div>
         </motion.div>
 
-        <p className="relative text-xs text-white/40">© 2026 Brainstomers. Internal use only.</p>
+        <p className="relative text-xs text-white/40">© 2026 SurvitechDahawi. Internal use only.</p>
       </div>
 
       {/* Form panel */}

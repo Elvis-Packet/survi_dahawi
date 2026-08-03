@@ -36,7 +36,7 @@ export default function Sidebar({ role, open, onClose }) {
               <Hexagon size={18} />
             </div>
             <div className="leading-tight">
-              <p className="text-sm font-bold text-navy-900 dark:text-gray-100">Brainstomers</p>
+              <p className="text-sm font-bold text-navy-900 dark:text-gray-100">SurvitechDahawi</p>
               <p className="text-[10px] uppercase tracking-wider text-gray-400">Fintech Suite</p>
             </div>
           </div>
@@ -76,8 +76,8 @@ export default function Sidebar({ role, open, onClose }) {
 
         {/* Footer */}
         <div className="border-t border-gray-200 px-5 py-4 dark:border-navy-800">
-          <p className="text-[10px] text-gray-400">Brainstomers v1.0.0 · MVP</p>
-          <p className="text-[10px] text-gray-400">© 2026 Brainstomers</p>
+          <p className="text-[10px] text-gray-400">SurvitechDahawi v1.0.0 · MVP</p>
+          <p className="text-[10px] text-gray-400">© 2026 SurvitechDahawi</p>
         </div>
       </aside>
     </>
