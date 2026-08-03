@@ -1,7 +1,7 @@
 export const CURRENT_USER = {
   id: 'usr_001',
   name: 'Alex Morgan',
-  email: 'alex.morgan@vertexfin.com',
+  email: 'alex.morgan@survitecxdahawi.com',
   role: 'staff',
   title: 'Senior Payments Analyst',
   department: 'Payments',
@@ -18,7 +18,7 @@ export const MOCK_USERS = [
   {
     id: 'usr_001',
     name: 'Alex Morgan',
-    email: 'alex.morgan@vertexfin.com',
+    email: 'alex.morgan@survitecxdahawi.com',
     role: 'staff',
     title: 'Senior Payments Analyst',
     department: 'Payments',
@@ -33,7 +33,7 @@ export const MOCK_USERS = [
   {
     id: 'usr_002',
     name: 'Priya Sharma',
-    email: 'priya.sharma@vertexfin.com',
+    email: 'priya.sharma@survitecxdahawi.com',
     role: 'staff',
     title: 'Compliance Associate',
     department: 'Compliance',
@@ -48,7 +48,7 @@ export const MOCK_USERS = [
   {
     id: 'usr_003',
     name: 'Daniel Chen',
-    email: 'daniel.chen@vertexfin.com',
+    email: 'daniel.chen@survitecxdahawi.com',
     role: 'staff',
     title: 'Risk Analyst',
     department: 'Risk',
@@ -63,7 +63,7 @@ export const MOCK_USERS = [
   {
     id: 'usr_004',
     name: 'Sarah Williams',
-    email: 'sarah.williams@vertexfin.com',
+    email: 'sarah.williams@survitecxdahawi.com',
     role: 'staff',
     title: 'Onboarding Specialist',
     department: 'Operations',
@@ -78,7 +78,7 @@ export const MOCK_USERS = [
   {
     id: 'usr_005',
     name: 'Marcus Johnson',
-    email: 'marcus.johnson@vertexfin.com',
+    email: 'marcus.johnson@survitecxdahawi.com',
     role: 'staff',
     title: 'Fraud Analyst',
     department: 'Risk',
@@ -93,7 +93,7 @@ export const MOCK_USERS = [
   {
     id: 'usr_006',
     name: 'Elena Rodriguez',
-    email: 'elena.rodriguez@vertexfin.com',
+    email: 'elena.rodriguez@survitecxdahawi.com',
     role: 'staff',
     title: 'Treasury Analyst',
     department: 'Finance',
@@ -108,7 +108,7 @@ export const MOCK_USERS = [
   {
     id: 'usr_007',
     name: 'Tom Baker',
-    email: 'tom.baker@vertexfin.com',
+    email: 'tom.baker@survitecxdahawi.com',
     role: 'staff',
     title: 'Platform Engineer',
     department: 'Engineering',
@@ -123,7 +123,7 @@ export const MOCK_USERS = [
   {
     id: 'usr_008',
     name: 'Aisha Khan',
-    email: 'aisha.khan@vertexfin.com',
+    email: 'aisha.khan@survitecxdahawi.com',
     role: 'staff',
     title: 'Customer Success Lead',
     department: 'Operations',
@@ -138,7 +138,7 @@ export const MOCK_USERS = [
   {
     id: 'usr_009',
     name: 'Noah Park',
-    email: 'noah.park@vertexfin.com',
+    email: 'noah.park@survitecxdahawi.com',
     role: 'staff',
     title: 'Data Analyst',
     department: 'Engineering',
@@ -153,7 +153,7 @@ export const MOCK_USERS = [
   {
     id: 'usr_010',
     name: 'Jordan Lee',
-    email: 'jordan.lee@vertexfin.com',
+    email: 'jordan.lee@survitecxdahawi.com',
     role: 'manager',
     title: 'Head of Payments',
     department: 'Payments',
@@ -168,7 +168,7 @@ export const MOCK_USERS = [
   {
     id: 'usr_011',
     name: 'Maya Patel',
-    email: 'maya.patel@vertexfin.com',
+    email: 'maya.patel@survitecxdahawi.com',
     role: 'manager',
     title: 'Head of Risk & Compliance',
     department: 'Risk',
@@ -183,7 +183,7 @@ export const MOCK_USERS = [
   {
     id: 'usr_100',
     name: 'Rachel Kim',
-    email: 'rachel.kim@vertexfin.com',
+    email: 'rachel.kim@survitecxdahawi.com',
     role: 'ceo',
     title: 'Chief Executive Officer',
     department: 'Executive',
@@ -198,7 +198,7 @@ export const MOCK_USERS = [
 ];
 
 export const DEMO_ACCOUNTS = [
-  { email: 'alex.morgan@vertexfin.com', password: 'password123', role: 'staff' },
-  { email: 'jordan.lee@vertexfin.com', password: 'password123', role: 'manager' },
-  { email: 'rachel.kim@vertexfin.com', password: 'password123', role: 'ceo' },
+  { email: 'alex.morgan@survitecxdahawi.com', password: 'password123', role: 'staff' },
+  { email: 'jordan.lee@survitecxdahawi.com', password: 'password123', role: 'manager' },
+  { email: 'rachel.kim@survitecxdahawi.com', password: 'password123', role: 'ceo' },
 ];

@@ -54,7 +54,7 @@ export default function ForgotPassword() {
             <Input
               label="Email address"
               type="email"
-              placeholder="you@vertexfin.com"
+              placeholder="you@survitecxdahawi.com"
               icon={Mail}
               error={errors.email?.message}
               {...register('email', email())}

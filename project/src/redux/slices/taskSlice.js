@@ -8,19 +8,24 @@ const initialState = {
   error: null,
 };
 
+const normalizeTask = (task) => ({
+  ...task,
+  comments: task.comments || [],
+});
+
 const taskSlice = createSlice({
   name: 'task',
   initialState,
   reducers: {
     setTasks(state, action) {
-      state.tasks = action.payload.items || action.payload;
+      state.tasks = (action.payload.items || action.payload).map(normalizeTask);
       state.total = action.payload.total || state.tasks.length;
     },
-    setSelectedTask(state, action) { state.selectedTask = action.payload; },
-    addTask(state, action) { state.tasks.unshift(action.payload); },
+    setSelectedTask(state, action) { state.selectedTask = normalizeTask(action.payload); },
+    addTask(state, action) { state.tasks.unshift(normalizeTask(action.payload)); },
     updateTaskInList(state, action) {
       const idx = state.tasks.findIndex((t) => t.id === action.payload.id);
-      if (idx !== -1) state.tasks[idx] = { ...state.tasks[idx], ...action.payload };
+      if (idx !== -1) state.tasks[idx] = { ...state.tasks[idx], ...normalizeTask(action.payload) };
     },
     removeTask(state, action) {
       state.tasks = state.tasks.filter((t) => t.id !== action.payload);

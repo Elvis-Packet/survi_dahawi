@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-const THEME_KEY = 'vertex_theme';
+const THEME_KEY = 'survitec_theme';
 
 export function useTheme() {
   const [theme, setTheme] = useState(() => {

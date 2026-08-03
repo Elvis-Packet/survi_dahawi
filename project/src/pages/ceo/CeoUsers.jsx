@@ -18,6 +18,7 @@ import SelectForm from '@/components/common/Select';
 import { useAppDispatch, useAppSelector } from '@/hooks/useAppDispatch';
 import { setUsers, addUser, updateUserInList, removeUser } from '@/redux/slices/userSlice';
 import { getUsers, createUser, suspendUser, activateUser, deleteUser } from '@/services/userService';
+import { getTasks } from '@/services/taskService';
 import { useTable } from '@/hooks/useTable';
 import { ROLE_LABELS } from '@/constants/roles';
 import { MOCK_DEPARTMENTS } from '@/data/departments';
@@ -31,12 +32,24 @@ export default function CeoUsers() {
   const [viewUser, setViewUser] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [creating, setCreating] = useState(false);
+  const [viewTasks, setViewTasks] = useState([]);
   const [form, setForm] = useState({ name: '', email: '', role: 'staff', department: 'Payments', title: '' });
   const table = useTable(users, { initialSort: { key: 'name', dir: 'asc' } });
 
   useEffect(() => {
     getUsers().then((res) => { dispatch(setUsers(res.data)); setLoading(false); });
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!viewUser) {
+      setViewTasks([]);
+      return;
+    }
+    getTasks().then((res) => {
+      const tasks = res.data.items.filter((task) => task.assigneeId === viewUser.id || task.assignerId === viewUser.id);
+      setViewTasks(tasks);
+    });
+  }, [viewUser]);
 
   const handleCreate = async () => {
     if (!form.name || !form.email) { toast.error('Name and email are required'); return; }
@@ -134,7 +147,7 @@ export default function CeoUsers() {
         footer={<><Button variant="secondary" size="sm" onClick={() => setCreateOpen(false)}>Cancel</Button><Button size="sm" loading={creating} onClick={handleCreate}>Create user</Button></>}>
         <div className="space-y-4">
           <Input label="Full name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Jane Doe" />
-          <Input label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="jane@vertexfin.com" />
+          <Input label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="jane@survitecxdahawi.com" />
           <div className="grid gap-4 sm:grid-cols-2">
             <SelectForm label="Role" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}
               options={[{ value: 'staff', label: 'Staff' }, { value: 'manager', label: 'Manager' }, { value: 'ceo', label: 'CEO' }]} />
@@ -163,6 +176,21 @@ export default function CeoUsers() {
               <Row label="Department" value={viewUser.department} />
               <Row label="Performance" value={`${viewUser.performance}/100`} />
               <Row label="Joined" value={formatDate(viewUser.joinedAt)} />
+            </div>
+            <div className="mt-4 w-full rounded-lg border border-gray-200 p-3 text-left dark:border-navy-800">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Related tasks</p>
+              {viewTasks.length === 0 ? (
+                <p className="text-sm text-gray-500 dark:text-gray-400">No task history found for this user.</p>
+              ) : (
+                <div className="space-y-2">
+                  {viewTasks.map((task) => (
+                    <div key={task.id} className="rounded-md bg-gray-50 p-2 text-xs dark:bg-navy-800/60">
+                      <p className="font-medium text-navy-900 dark:text-gray-100">{task.title}</p>
+                      <p className="mt-1 text-gray-500 dark:text-gray-400">{task.assigneeId === viewUser.id ? 'Assigned to user' : 'Assigned by user'} · {task.status}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}

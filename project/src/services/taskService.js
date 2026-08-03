@@ -3,12 +3,13 @@ import { MOCK_TASKS } from '@/data/tasks';
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// TODO: GET /api/tasks?assigneeId=&status=&page=
+// TODO: GET /api/tasks?assigneeId=&assignerId=&status=&page=
 export const getTasks = async (params = {}) => {
   // return axiosClient.get('/tasks', { params });
   await delay(400);
   let items = [...MOCK_TASKS];
   if (params.assigneeId) items = items.filter((t) => t.assigneeId === params.assigneeId);
+  if (params.assignerId) items = items.filter((t) => t.assignerId === params.assignerId);
   if (params.status) items = items.filter((t) => t.status === params.status);
   return { data: { items, total: items.length, page: 1, pageSize: 20 } };
 };
@@ -25,7 +26,17 @@ export const getTaskById = async (id) => {
 export const createTask = async (data) => {
   // return axiosClient.post('/tasks', data);
   await delay(500);
-  return { data: { ...data, id: `tsk_${Date.now()}`, status: 'pending', progress: 0, verified: false, createdAt: new Date().toISOString() } };
+  return {
+    data: {
+      ...data,
+      id: `tsk_${Date.now()}`,
+      status: 'pending',
+      progress: 0,
+      verified: false,
+      createdAt: new Date().toISOString(),
+      comments: data.comments || [],
+    },
+  };
 };
 
 // TODO: PATCH /api/tasks/:id
@@ -54,6 +65,24 @@ export const verifyTask = async (id, payload) => {
   // return axiosClient.post(`/tasks/${id}/verify`, payload);
   await delay(400);
   return { data: { id, status: 'verified', verified: true, reviewNotes: payload?.notes } };
+};
+
+// TODO: POST /api/tasks/:id/comments
+export const addTaskComment = async (id, comment) => {
+  await delay(300);
+  return {
+    data: {
+      id,
+      comments: [
+        ...(MOCK_TASKS.find((t) => t.id === id)?.comments || []),
+        {
+          id: `cmt_${Date.now()}`,
+          ...comment,
+          createdAt: new Date().toISOString(),
+        },
+      ],
+    },
+  };
 };
 
 // TODO: DELETE /api/tasks/:id

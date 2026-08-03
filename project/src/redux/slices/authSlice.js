@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const token = localStorage.getItem('vertex_token');
-const storedUser = localStorage.getItem('vertex_user');
+const token = localStorage.getItem('survitec_token');
+const storedUser = localStorage.getItem('survitec_user');
 
 const initialState = {
   user: storedUser ? JSON.parse(storedUser) : null,
@@ -21,19 +21,19 @@ const authSlice = createSlice({
       state.token = tok;
       state.isAuthenticated = true;
       state.error = null;
-      localStorage.setItem('vertex_token', tok);
-      localStorage.setItem('vertex_user', JSON.stringify(user));
+      localStorage.setItem('survitec_token', tok);
+      localStorage.setItem('survitec_user', JSON.stringify(user));
     },
     logout(state) {
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
-      localStorage.removeItem('vertex_token');
-      localStorage.removeItem('vertex_user');
+      localStorage.removeItem('survitec_token');
+      localStorage.removeItem('survitec_user');
     },
     updateCurrentUser(state, action) {
       state.user = { ...state.user, ...action.payload };
-      localStorage.setItem('vertex_user', JSON.stringify(state.user));
+      localStorage.setItem('survitec_user', JSON.stringify(state.user));
     },
     setAuthStatus(state, action) {
       state.status = action.payload;

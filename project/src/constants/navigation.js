@@ -42,6 +42,7 @@ export const NAV_ITEMS = {
   ceo: [
     { label: 'Dashboard', icon: LayoutDashboard, path: ROUTES.CEO_DASHBOARD },
     { label: 'Users', icon: Users, path: ROUTES.CEO_USERS },
+    { label: 'Assign Tasks', icon: UserPlus, path: ROUTES.MANAGER_ASSIGN_TASKS },
     { label: 'Departments', icon: Building2, path: ROUTES.CEO_DEPARTMENTS },
     { label: 'Reports', icon: FileBarChart, path: ROUTES.CEO_REPORTS },
     { label: 'Audit Logs', icon: ScrollText, path: ROUTES.CEO_AUDIT_LOGS },

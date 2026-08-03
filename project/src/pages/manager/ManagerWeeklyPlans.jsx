@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { CalendarRange, Check, X, Eye } from 'lucide-react';
+import { CalendarRange, Check, X, Eye, MessageSquarePlus } from 'lucide-react';
 import PageHeader from '@/components/layout/PageHeader';
 import Card from '@/components/common/Card';
 import Button from '@/components/common/Button';
@@ -9,19 +9,22 @@ import Avatar from '@/components/common/Avatar';
 import EmptyState from '@/components/common/EmptyState';
 import Modal from '@/components/common/Modal';
 import Textarea from '@/components/common/Textarea';
-import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { useAppDispatch, useAppSelector } from '@/hooks/useAppDispatch';
 import { setPlans, updatePlanInList } from '@/redux/slices/planSlice';
-import { getPlans, approvePlan, rejectPlan } from '@/services/planService';
+import { getPlans, approvePlan, rejectPlan, addPlanComment } from '@/services/planService';
 import { PLAN_STATUS_LABELS } from '@/constants/statuses';
 import { formatDate } from '@/utils/format';
 
 export default function ManagerWeeklyPlans() {
   const dispatch = useAppDispatch();
+  const user = useAppSelector((s) => s.auth.user);
   const [plans, setLocalPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('submitted');
   const [selected, setSelected] = useState(null);
   const [notes, setNotes] = useState('');
+  const [commentDraft, setCommentDraft] = useState('');
+  const [commenting, setCommenting] = useState(false);
   const [acting, setActing] = useState(false);
 
   useEffect(() => {
@@ -63,6 +66,29 @@ export default function ManagerWeeklyPlans() {
       toast.error('Could not reject plan');
     } finally {
       setActing(false);
+    }
+  };
+
+  const saveComment = async () => {
+    if (!commentDraft.trim() || !selected) return;
+    setCommenting(true);
+    try {
+      const res = await addPlanComment(selected.id, {
+        authorId: user?.id,
+        authorName: user?.name,
+        role: user?.role,
+        message: commentDraft.trim(),
+      });
+      const nextSelected = { ...selected, comments: res.data.comments || [] };
+      dispatch(updatePlanInList(nextSelected));
+      setLocalPlans((prev) => prev.map((p) => (p.id === selected.id ? nextSelected : p)));
+      setSelected(nextSelected);
+      setCommentDraft('');
+      toast.success('Comment added');
+    } catch {
+      toast.error('Could not add comment');
+    } finally {
+      setCommenting(false);
     }
   };
 
@@ -161,6 +187,42 @@ export default function ManagerWeeklyPlans() {
                 <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">{selected.reviewNotes}</p>
               </div>
             )}
+
+            <div className="rounded-lg border border-gray-200 p-4 dark:border-navy-800">
+              <div className="mb-3 flex items-center gap-2 text-sm font-medium text-navy-800 dark:text-gray-200">
+                <MessageSquarePlus size={15} />
+                Plan comments
+              </div>
+              <div className="space-y-2">
+                {(selected.comments || []).length === 0 ? (
+                  <p className="text-xs text-gray-500 dark:text-gray-400">No comments yet.</p>
+                ) : (
+                  (selected.comments || []).map((comment) => (
+                    <div key={comment.id} className="rounded-lg bg-gray-50 p-3 text-xs dark:bg-navy-800/60">
+                      <div className="mb-1 flex items-center justify-between gap-2">
+                        <span className="font-semibold text-navy-900 dark:text-gray-100">{comment.authorName || 'Commenter'}</span>
+                        <span className="text-gray-400">{formatDate(comment.createdAt)}</span>
+                      </div>
+                      <p className="text-gray-600 dark:text-gray-300">{comment.message}</p>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {(user?.role === 'manager' || user?.role === 'ceo') && (
+                <div className="mt-3 space-y-2">
+                  <Textarea
+                    label="Add comment"
+                    rows={2}
+                    placeholder="Leave review feedback for the department or staff member…"
+                    value={commentDraft}
+                    onChange={(e) => setCommentDraft(e.target.value)}
+                  />
+                  <Button size="sm" loading={commenting} onClick={saveComment}>Add comment</Button>
+                </div>
+              )}
+            </div>
+
             {selected.status === 'submitted' && (
               <Textarea label="Review notes (optional)" placeholder="Add feedback for the employee…" value={notes} onChange={(e) => setNotes(e.target.value)} />
             )}

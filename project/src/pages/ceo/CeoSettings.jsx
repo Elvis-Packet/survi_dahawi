@@ -51,7 +51,7 @@ export default function CeoSettings() {
               <h3 className="text-sm font-semibold text-navy-900 dark:text-gray-100">General settings</h3>
               <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">Organization name, locale, and defaults.</p>
               <div className="mt-5 space-y-4">
-                <Input label="Organization name" defaultValue="Vertex Financial" />
+                <Input label="Organization name" defaultValue="SurvitecXDahawi" />
                 <div className="grid gap-4 sm:grid-cols-2">
                   <Select label="Default language" options={[{ value: 'en', label: 'English' }, { value: 'es', label: 'Spanish' }]} placeholder="English" />
                   <Select label="Timezone" options={[{ value: 'pst', label: 'Pacific (PST)' }, { value: 'est', label: 'Eastern (EST)' }, { value: 'utc', label: 'UTC' }]} placeholder="Pacific (PST)" />

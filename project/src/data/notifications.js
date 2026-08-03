@@ -48,7 +48,7 @@ export const MOCK_NOTIFICATIONS = [
     id: 'ntf_006',
     type: 'system',
     title: 'Scheduled maintenance',
-    message: 'Vertex will undergo maintenance on Aug 5, 2:00–3:00 AM UTC.',
+    message: 'SurvitecXDahawi will undergo maintenance on Aug 5, 2:00–3:00 AM UTC.',
     read: true,
     createdAt: '2026-07-30T18:00:00.000Z',
     link: null,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { CheckSquare, ChevronRight, Flag } from 'lucide-react';
+import { CheckSquare, ChevronRight, Flag, MessageSquarePlus } from 'lucide-react';
 import PageHeader from '@/components/layout/PageHeader';
 import Card from '@/components/common/Card';
 import Button from '@/components/common/Button';
@@ -8,9 +8,10 @@ import Badge, { statusTone } from '@/components/common/Badge';
 import StatusBadge from '@/components/common/StatusBadge';
 import EmptyState from '@/components/common/EmptyState';
 import Modal from '@/components/common/Modal';
+import Textarea from '@/components/common/Textarea';
 import { useAppDispatch, useAppSelector } from '@/hooks/useAppDispatch';
 import { setTasks, updateTaskInList } from '@/redux/slices/taskSlice';
-import { getTasks, updateTaskProgress, markTaskComplete } from '@/services/taskService';
+import { getTasks, updateTaskProgress, markTaskComplete, addTaskComment } from '@/services/taskService';
 import { PRIORITY_LABELS } from '@/constants/statuses';
 import { formatDate } from '@/utils/format';
 import { cn } from '@/utils/cn';
@@ -26,6 +27,8 @@ export default function StaffTasks() {
   const [selected, setSelected] = useState(null);
   const [progressValue, setProgressValue] = useState(0);
   const [saving, setSaving] = useState(false);
+  const [commentDraft, setCommentDraft] = useState('');
+  const [commenting, setCommenting] = useState(false);
 
   useEffect(() => {
     getTasks({ assigneeId: user?.id }).then((res) => {
@@ -39,6 +42,28 @@ export default function StaffTasks() {
   const openTask = (task) => {
     setSelected(task);
     setProgressValue(task.progress || 0);
+    setCommentDraft('');
+  };
+
+  const saveComment = async () => {
+    if (!commentDraft.trim() || !selected) return;
+    setCommenting(true);
+    try {
+      const res = await addTaskComment(selected.id, {
+        authorId: user?.id,
+        authorName: user?.name,
+        message: commentDraft.trim(),
+      });
+      const updated = { ...selected, comments: res.data.comments || [] };
+      dispatch(updateTaskInList(updated));
+      setSelected(updated);
+      setCommentDraft('');
+      toast.success('Comment added');
+    } catch {
+      toast.error('Could not add comment');
+    } finally {
+      setCommenting(false);
+    }
   };
 
   const saveProgress = async () => {
@@ -177,6 +202,41 @@ export default function StaffTasks() {
               <Info label="Due date" value={formatDate(selected.dueDate)} />
               <Info label="Created" value={formatDate(selected.createdAt)} />
               <Info label="Tags" value={selected.tags?.join(', ') || '—'} />
+            </div>
+
+            <div className="rounded-lg border border-gray-200 p-4 dark:border-navy-800">
+              <div className="mb-3 flex items-center gap-2 text-sm font-medium text-navy-800 dark:text-gray-200">
+                <MessageSquarePlus size={15} />
+                Task comments
+              </div>
+              <div className="space-y-2">
+                {(selected.comments || []).length === 0 ? (
+                  <p className="text-xs text-gray-500 dark:text-gray-400">No comments yet.</p>
+                ) : (
+                  (selected.comments || []).map((comment) => (
+                    <div key={comment.id} className="rounded-lg bg-gray-50 p-3 text-xs dark:bg-navy-800/60">
+                      <div className="mb-1 flex items-center justify-between gap-2">
+                        <span className="font-semibold text-navy-900 dark:text-gray-100">{comment.authorName || 'Commenter'}</span>
+                        <span className="text-gray-400">{formatDate(comment.createdAt)}</span>
+                      </div>
+                      <p className="text-gray-600 dark:text-gray-300">{comment.message}</p>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {(user?.role === 'manager' || user?.role === 'ceo') && (
+                <div className="mt-3 space-y-2">
+                  <Textarea
+                    label="Add comment"
+                    rows={2}
+                    placeholder="Leave a review note or update for the assignee…"
+                    value={commentDraft}
+                    onChange={(e) => setCommentDraft(e.target.value)}
+                  />
+                  <Button size="sm" loading={commenting} onClick={saveComment}>Add comment</Button>
+                </div>
+              )}
             </div>
 
             {selected.status !== 'completed' && selected.status !== 'verified' && (

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { UserPlus, Send } from 'lucide-react';
+import { UserPlus, Send, Trash2 } from 'lucide-react';
 import PageHeader from '@/components/layout/PageHeader';
 import Card from '@/components/common/Card';
 import Button from '@/components/common/Button';
@@ -11,13 +11,14 @@ import Select from '@/components/common/Select';
 import DatePicker from '@/components/forms/DatePicker';
 import Badge from '@/components/common/Badge';
 import { getUsers } from '@/services/userService';
-import { createTask } from '@/services/taskService';
-import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { addTask } from '@/redux/slices/taskSlice';
+import { createTask, deleteTask, getTasks } from '@/services/taskService';
+import { useAppDispatch, useAppSelector } from '@/hooks/useAppDispatch';
+import { addTask, removeTask } from '@/redux/slices/taskSlice';
 import { MOCK_DEPARTMENTS } from '@/data/departments';
 
 export default function ManagerAssignTasks() {
   const dispatch = useAppDispatch();
+  const user = useAppSelector((s) => s.auth.user);
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(false);
   const [recent, setRecent] = useState([]);
@@ -25,13 +26,21 @@ export default function ManagerAssignTasks() {
 
   useEffect(() => {
     getUsers({ role: 'staff' }).then((res) => setEmployees(res.data.items));
-  }, []);
+    getTasks({ assignerId: user?.id }).then((res) => setRecent(res.data.items.slice(0, 5)));
+  }, [user?.id]);
 
   const onSubmit = async (data) => {
     setLoading(true);
     try {
       const assignee = employees.find((e) => e.id === data.assigneeId);
-      const payload = { ...data, assigneeName: assignee?.name, assignerName: 'Jordan Lee', assignerId: 'usr_010', department: assignee?.department };
+      const payload = {
+        ...data,
+        assigneeName: assignee?.name,
+        assignerName: user?.name,
+        assignerId: user?.id,
+        department: assignee?.department,
+        tags: Array.isArray(data.tags) ? data.tags : String(data.tags || '').split(',').map((t) => t.trim()).filter(Boolean),
+      };
       const res = await createTask(payload);
       dispatch(addTask(res.data));
       setRecent((prev) => [res.data, ...prev].slice(0, 5));
@@ -41,6 +50,17 @@ export default function ManagerAssignTasks() {
       toast.error('Could not assign task');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRemoveRecent = async (taskId) => {
+    try {
+      await deleteTask(taskId);
+      dispatch(removeTask(taskId));
+      setRecent((prev) => prev.filter((t) => t.id !== taskId));
+      toast.success('Task removed');
+    } catch {
+      toast.error('Could not remove task');
     }
   };
 
@@ -94,10 +114,17 @@ export default function ManagerAssignTasks() {
             <div className="space-y-2">
               {recent.map((t) => (
                 <div key={t.id} className="rounded-lg border border-gray-100 p-3 dark:border-navy-800">
-                  <p className="truncate text-sm font-medium text-navy-900 dark:text-gray-100">{t.title}</p>
-                  <div className="mt-1 flex items-center justify-between">
-                    <span className="text-xs text-gray-500 dark:text-gray-400">{t.assigneeName}</span>
-                    <Badge tone="info">{t.priority}</Badge>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-navy-900 dark:text-gray-100">{t.title}</p>
+                      <div className="mt-1 flex items-center justify-between gap-2">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">{t.assigneeName}</span>
+                        <Badge tone="info">{t.priority}</Badge>
+                      </div>
+                    </div>
+                    <button onClick={() => handleRemoveRecent(t.id)} className="rounded-md p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/30" title="Remove task">
+                      <Trash2 size={14} />
+                    </button>
                   </div>
                 </div>
               ))}

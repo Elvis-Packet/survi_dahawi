@@ -16,7 +16,7 @@ const axiosClient = axios.create({
 // Attach JWT token to every request
 axiosClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('vertex_token');
+    const token = localStorage.getItem('survitec_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -31,7 +31,7 @@ axiosClient.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Token invalid — clear and let auth guard redirect
-      localStorage.removeItem('vertex_token');
+      localStorage.removeItem('survitec_token');
     }
     return Promise.reject(error);
   }
